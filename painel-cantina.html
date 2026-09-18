@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Operacional - Cantina Inteligente</title>
+  <link rel="stylesheet" href="estilo.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="ph ph-storefront"></i>
+        <span>Cantina Op</span>
+      </div>
+      <nav class="menu">
+        <a href="#" class="active"><i class="ph ph-list-checks"></i> Fila de Pedidos</a>
+        <a href="#"><i class="ph ph-cooking-pot"></i> Demanda da Cozinha</a>
+        <a href="#"><i class="ph ph-qr-code"></i> Validar QR Code</a>
+        <a href="#"><i class="ph ph-chart-line-up"></i> Relatórios Nutri</a>
+      </nav>
+      <div class="user-role">
+        <p>Acesso Restrito</p>
+        <span class="badge-role">Nutrição / Cantina</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <h1>Fila de Pedidos & Retirada</h1>
+        <div class="search-box">
+          <i class="ph ph-magnifying-glass"></i>
+          <input type="text" placeholder="Buscar por aluno, turma ou pedido...">
+        </div>
+      </header>
+
+      <section class="summary-cards">
+        <div class="card">
+          <i class="ph ph-clock yellow"></i>
+          <div>
+            <h3>24</h3>
+            <p>A Preparar (12:00 - 12:30)</p>
+          </div>
+        </div>
+        <div class="card">
+          <i class="ph ph-package green"></i>
+          <div>
+            <h3>12</h3>
+            <p>Prontos p/ Retirada</p>
+          </div>
+        </div>
+        <div class="card">
+          <i class="ph ph-check-circle blue"></i>
+          <div>
+            <h3>85</h3>
+            <p>Entregues Hoje</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Horário</th>
+              <th>Aluno / Turma</th>
+              <th>Itens do Pedido</th>
+              <th>Pagamento</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="time-tag">12:00</span></td>
+              <td>
+                <strong>Maria Eduarda</strong>
+                <small>2º Informática</small>
+              </td>
+              <td>1x X-Burger, 1x Suco Natural, 1x Brownie</td>
+              <td><span class="pay-tag">PIX Pago</span></td>
+              <td><span class="status status-preparing">Em Preparo</span></td>
+              <td><button class="btn btn-ready">Marcar Pronto</button></td>
+            </tr>
+            <tr>
+              <td><span class="time-tag">12:00</span></td>
+              <td>
+                <strong>Carine Sousa</strong>
+                <small>2º Informática</small>
+              </td>
+              <td>2x Misto Quente, 1x Refrigerante Lata</td>
+              <td><span class="pay-tag">PIX Pago</span></td>
+              <td><span class="status status-ready">Pronto p/ Retirada</span></td>
+              <td><button class="btn btn-deliver">Entregar</button></td>
+            </tr>
+            <tr>
+              <td><span class="time-tag">12:15</span></td>
+              <td>
+                <strong>Isabela Almeida</strong>
+                <small>1º Edificações</small>
+              </td>
+              <td>1x Pão de Queijo, 1x Suco Natural</td>
+              <td><span class="pay-tag">PIX Pago</span></td>
+              <td><span class="status status-pending">Pendente</span></td>
+              <td><button class="btn btn-start">Iniciar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>

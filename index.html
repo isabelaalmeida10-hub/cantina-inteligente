@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantina Free Time - IFSP</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO OBRIGATÓRIO) -->
+    <div id="auth-screen" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="logo_ifsp.jpg" alt="Logo Cantina Free Time" class="brand-logo-img">
+                <div>
+                    <h2>Cantina Free Time</h2>
+                    <p style="font-size: 11px; color: var(--text-muted);">Campus IFSP</p>
+                </div>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-form="login">Entrar</button>
+                <button class="auth-tab" data-form="register">Cadastrar</button>
+            </div>
+
+            <!-- Login -->
+            <form id="form-login" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>E-mail institucional</label>
+                    <input type="email" id="login-email" required placeholder="seu.nome@aluno.ifsp.edu.br">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <p id="login-error" class="error-msg" style="display:none; color: red; font-size: 12px; margin-bottom: 8px;">
+                    Usuário não encontrado ou senha incorreta. Cadastre-se primeiro!
+                </p>
+                <button type="submit" class="btn-primary">Acessar App</button>
+            </form>
+
+            <!-- Cadastro Obrigatório -->
+            <form id="form-register" class="auth-form" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nome completo</label>
+                    <input type="text" id="reg-name" required placeholder="Seu Nome Completo">
+                </div>
+                <div class="form-group">
+                    <label>E-mail institucional</label>
+                    <input type="email" id="reg-email" required placeholder="seu.nome@aluno.ifsp.edu.br">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="reg-password" required placeholder="Crie uma senha">
+                </div>
+                <button type="submit" class="btn-primary">Criar Minha Conta</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ESTRUTURA PRINCIPAL DO APP -->
+    <div id="app-container" class="hidden">
+        <!-- Sidebar -->
+        <aside>
+            <div>
+                <div class="logo-area">
+                    <img src="logo_ifsp.jpg" alt="Logo Cantina Free Time" class="sidebar-logo">
+                    <div class="title">
+                        <h2>Cantina Free Time</h2>
+                        <p>Reservou, retirou, aproveitou!</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li class="active" data-tab="inicio"><i data-lucide="home"></i> Início</li>
+                        <li data-tab="cardapio"><i data-lucide="utensils"></i> Cardápio</li>
+                        <li data-tab="reservas"><i data-lucide="bookmark"></i> Reservas</li>
+                        <li data-tab="historico"><i data-lucide="history"></i> Histórico</li>
+                        <li data-tab="graficos"><i data-lucide="bar-chart-3"></i> Gráficos</li>
+                        <li data-tab="perfil"><i data-lucide="user"></i> Meu perfil</li>
+                        <li onclick="logout()"><i data-lucide="log-out"></i> Sair</li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="banner-card">
+                <h4>Evite filas, evite desperdício.</h4>
+                <p>Planeje, reserve e aproveite!</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <header>
+                <div class="header-info-box">
+                    <i data-lucide="clock" style="width: 16px;"></i>
+                    Próximo horário para retirada: <strong>12:00 - 12:30</strong>
+                </div>
+                <div class="cart-box" onclick="openCartModal()">
+                    <i data-lucide="shopping-bag" style="width: 16px; color: var(--primary);"></i>
+                    <span>Meu pedido: <strong id="cart-items-count">0 itens</strong></span>
+                    <strong id="cart-total-price" style="margin-left: 10px;">R$ 0,00</strong>
+                </div>
+            </header>
+
+            <div class="content-area">
+
+                <!-- 1. INÍCIO REPROJETADO -->
+                <section id="inicio" class="view-section active">
+                    <div class="hero-banner">
+                        <div class="hero-text">
+                            <h1>Bem-vindo(a) à Free Time, <span id="user-welcome-name">Aluno</span>! 👋</h1>
+                            <p>Sua cantina escolar inteligente. Faça sua reserva antecedente e garanta sua refeição sem perder tempo na fila.</p>
+                            <button class="btn-hero" onclick="switchTab('cardapio')">Fazer Pedido Agora</button>
+                        </div>
+                        <div class="hero-img-container">
+                            <img src="logo_ifsp.jpg" alt="Ilustração Cantina Free Time" class="hero-img">
+                        </div>
+                    </div>
+
+                    <div class="quick-stats-grid">
+                        <div class="stat-card">
+                            <i data-lucide="clock"></i>
+                            <div>
+                                <h4>Tempo Médio Salvo</h4>
+                                <p>15 minutos de fila a menos</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i data-lucide="check-circle-2"></i>
+                            <div>
+                                <h4>Status da Cantina</h4>
+                                <p><span class="badge-online">Aberta para pedidos</span></p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i data-lucide="shield-check"></i>
+                            <div>
+                                <h4>Pagamento PIX</h4>
+                                <p>Rápido e 100% seguro</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 16px; font-size: 18px;">Como funciona?</h3>
+                    <div class="steps-container">
+                        <div class="step-card">
+                            <i data-lucide="utensils"></i>
+                            <h3>1. ESCOLHA</h3>
+                            <p>Navegue pelas opções de refeições, lanches, doces e bebidas.</p>
+                        </div>
+                        <div class="step-card">
+                            <i data-lucide="info"></i>
+                            <h3>2. INGREDIENTES</h3>
+                            <p>Confira a composição detalhada dos pratos antes de adicionar.</p>
+                        </div>
+                        <div class="step-card">
+                            <i data-lucide="qr-code"></i>
+                            <h3>3. PAGUE</h3>
+                            <p>Finalize sua compra e faça o pagamento instantâneo via PIX.</p>
+                        </div>
+                        <div class="step-card">
+                            <i data-lucide="smile"></i>
+                            <h3>4. RETIRE</h3>
+                            <p>Apresente o QR Code no balcão e retire seu pedido sem filas!</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. CARDÁPIO EXPANDIDO -->
+                <section id="cardapio" class="view-section">
+                    <h2>Cardápio Free Time</h2>
+                    <div class="category-filters" style="margin-top: 12px;">
+                        <button class="filter-btn active" onclick="filterCategory('Todos', this)">Todos</button>
+                        <button class="filter-btn" onclick="filterCategory('Almoço', this)">Almoço</button>
+                        <button class="filter-btn" onclick="filterCategory('Lanches', this)">Lanches</button>
+                        <button class="filter-btn" onclick="filterCategory('Bebidas', this)">Bebidas</button>
+                        <button class="filter-btn" onclick="filterCategory('Doces', this)">Doces</button>
+                    </div>
+
+                    <div class="menu-grid" id="menu-grid">
+                        <!-- Renderizado via JS -->
+                    </div>
+                </section>
+
+                <!-- 3. RESERVAS -->
+                <section id="reservas" class="view-section">
+                    <h2>Minhas Reservas</h2>
+                    <div class="reserva-detail" style="margin-top: 16px;">
+                        <div>
+                            <h4 style="margin-bottom: 12px;">Detalhes da reserva ativa</h4>
+                            <p style="font-size: 13px; color: var(--text-muted);"><i data-lucide="calendar" style="width: 14px;"></i> <span id="reserva-date">Nenhuma reserva ativa no momento</span></p>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;"><i data-lucide="clock" style="width: 14px;"></i> Horário de Retirada: 12:00 - 12:30</p>
+                            
+                            <div style="border-top: 1px solid var(--border-color); padding-top: 12px;" id="reserva-items-list">
+                                <p style="font-size: 13px; color: var(--text-muted);">Adicione produtos do cardápio e finalize o pedido.</p>
+                            </div>
+                            
+                            <div style="display:flex; justify-content: space-between; font-weight: bold; font-size: 15px; border-top: 1px dashed var(--border-color); margin-top: 12px; padding-top: 8px;">
+                                <span>Total</span>
+                                <span style="color: var(--primary);" id="reserva-total-value">R$ 0,00</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; border-left: 1px solid var(--border-color); padding-left: 20px;">
+                            <span class="status-badge concluido" style="display: inline-block; margin-bottom: 12px;">Confirmada</span>
+                            <div class="qr-placeholder">
+                                <i data-lucide="qr-code" style="width: 64px; height: 64px; color: #333;"></i>
+                            </div>
+                            <p style="font-size: 11px; color: var(--text-muted);">Chave PIX (CNPJ):<br>12.345.678/0001-99</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. HISTÓRICO -->
+                <section id="historico" class="view-section">
+                    <h2>Histórico de Pedidos</h2>
+                    <div class="table-card" style="margin-top: 16px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Itens</th>
+                                    <th>Total</th>
+                                    <th>Pagamento</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 5. GRÁFICOS -->
+                <section id="graficos" class="view-section">
+                    <h2>Gráficos de Vendas</h2>
+                    <div class="dash-grid" style="margin-top: 16px;">
+                        <div class="dash-card">
+                            <h4 style="margin-bottom: 12px;">Vendas por Categoria</h4>
+                            <canvas id="chartCategoria" style="max-height: 220px;"></canvas>
+                        </div>
+                        <div class="dash-card">
+                            <h4 style="margin-bottom: 12px;">Vendas por Dia</h4>
+                            <canvas id="chartDia" style="max-height: 220px;"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. PERFIL -->
+                <section id="perfil" class="view-section">
+                    <h2>Meu Perfil</h2>
+                    <div class="profile-layout" style="margin-top: 16px;">
+                        <div class="dash-card">
+                            <h4 style="margin-bottom: 16px;">Dados pessoais</h4>
+                            <div class="form-group">
+                                <label>Nome completo</label>
+                                <input type="text" id="profile-name">
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" id="profile-email" readonly style="background:#f0f0f0;">
+                            </div>
+                            <button class="btn-primary" style="margin-top: 8px;">Salvar alterações</button>
+                        </div>
+                        <div class="dash-card">
+                            <h4>Resumo</h4>
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 12px; color: var(--text-muted);">Pedidos realizados</p>
+                                <h2 style="color: var(--primary);" id="profile-orders-count">0</h2>
+                            </div>
+                            <div style="margin-top: 16px;">
+                                <p style="font-size: 12px; color: var(--text-muted);">Total gasto</p>
+                                <h2 style="color: var(--primary);" id="profile-total-spent">R$ 0,00</h2>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <footer>
+                Cantina Free Time &copy; 2024 - IFSP | Todos os direitos reservados.
+            </footer>
+        </main>
+    </div>
+
+    <!-- MODAL DO CARRINHO DE COMPRAS -->
+    <div id="cart-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Meu Carrinho</h3>
+                <button onclick="closeCartModal()" class="close-modal-btn">✕</button>
+            </div>
+            <div id="modal-cart-items" style="max-height: 240px; overflow-y: auto; margin-bottom: 16px;">
+                <!-- Itens dinâmicos -->
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom: 16px; font-weight:bold;">
+                <span>Total:</span>
+                <span id="modal-cart-total" style="color:var(--primary);">R$ 0,00</span>
+            </div>
+            <button class="btn-primary" onclick="checkout()">Finalizar Pedido</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE INGREDIENTES -->
+    <div id="ingredients-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="ing-item-title">Ingredientes</h3>
+                <button onclick="closeIngredientsModal()" class="close-modal-btn">✕</button>
+            </div>
+            <div style="margin-bottom: 16px;">
+                <p id="ing-item-desc" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"></p>
+                <h4 style="font-size: 14px; margin-bottom: 6px;">Lista de Ingredientes:</h4>
+                <ul id="ing-item-list" style="padding-left: 20px; font-size: 13px; color: #444;">
+                </ul>
+            </div>
+            <button class="btn-primary" onclick="closeIngredientsModal()">Fechar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
